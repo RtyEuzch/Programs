@@ -5,7 +5,7 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 public class BouncingBlockMain {
-    public static final int WIDTH = 500;
+    public static final int WIDTH = 700;
     public static final int HEIGHT = 300;
     public static void main(String[] args) {
         /*
@@ -21,6 +21,7 @@ public class BouncingBlockMain {
         BouncingBlockComponent component = new BouncingBlockComponent();
         frame.add(component);
         frame.setVisible(true);
+        component.addButton(frame);
     }
 }
 
@@ -32,24 +33,26 @@ class BouncingBlockComponent extends JComponent {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         //Adding the block
-        int recWidth = getWidth() / 3;
+        int recWidth = getWidth() / 4;
         int recHeight = getHeight() / 3;
         heightOffset = recHeight / 2;
         int xCoord = getWidth() / X_POS;
         int yCoord = getHeight() / Y_POS - heightOffset;
         Block block = new Block(xCoord, yCoord, recWidth, recHeight);
         block.draw(g2);
+    }
 
+    public void addButton(JFrame frame) {
         //Adding the button to start the movement of the block
         JButton button = new JButton("Start");
-         ActionListener bListen = new ActionListener() {
+        ActionListener bListen = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Hey");
             }
-        };/**/
+        };
         button.addActionListener(bListen);
-        //Add te button to the component
+        frame.add(button);
     }
 
     /** This class represents the block entity and manipulates its
