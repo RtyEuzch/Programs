@@ -5,18 +5,12 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 public class BouncingBlockMain {
-    public static final int WIDTH = 700;
-    public static final int HEIGHT = 300;
+    public static final int FRAME_WIDTH = 700;
+    public static final int FRAME_HEIGHT = 300;
     public static void main(String[] args) {
-        /*
-         * 1. Create a frame
-         * 2. Create a component
-         * 3. Create a block object class so that the block can move
-         * 4. Draw the block first
-         */
         JFrame frame = new JFrame(); 
-        frame.setSize(WIDTH, HEIGHT);
-        frame.setTitle("BouncingBlock");
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setTitle("Bouncing Block");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BouncingBlockComponent component = new BouncingBlockComponent();
         frame.add(component);
@@ -29,7 +23,7 @@ public class BouncingBlockMain {
  * 
  */
 class BouncingBlockComponent extends JComponent {
-    public static final int INCREMENT = 20;
+    public static final int INCREMENT = 10;
     public static final int DELAY = 10;
     public static final int X_POS = 10;
     public static final int Y_POS = 2; 
@@ -39,25 +33,24 @@ class BouncingBlockComponent extends JComponent {
      * The constructor, which creates the block
      */
     public BouncingBlockComponent() {
-        block = new Block(); System.out.println("Construct a blcok");
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {System.out.println("Painted");
-        Graphics2D g2 = (Graphics2D) g;
-        //Adding the block
-        block.draw(g2);
+        block = new Block(BouncingBlockMain.FRAME_WIDTH, 
+                          BouncingBlockMain.FRAME_HEIGHT); 
     }
     /**
      * 
      */
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        block.draw(g2); 
+    }
+
     public void addButton(JFrame frame) {
         //Adding the button to start the movement of the block
         JButton button = new JButton("Start");
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("Hey");
                 motionMover();
             }
         });
@@ -70,19 +63,18 @@ class BouncingBlockComponent extends JComponent {
     public void motionMover() {
         class TimerListener implements ActionListener {
             private Block b;
-            public TimerListener(Block bl) { System.out.println("TimerListened");
+            public TimerListener(Block bl) {
                 b = bl;
             }
 
             @Override
             public void actionPerformed(ActionEvent event) {
-                b.move(INCREMENT); 
+                b.move(INCREMENT);
             }
         }
         ActionListener timeListen = new TimerListener(block);
         t = new Timer(DELAY, timeListen);
-        t.start(); System.out.println("Timer started");
-        
+        t.start(); 
     }
 
     /** This class represents the block entity and manipulates its
@@ -94,15 +86,15 @@ class BouncingBlockComponent extends JComponent {
         public static double heightOffset;     
         private double width;
         private double height;    
-        private double x;
+        public double x;
         private double y;
         private Rectangle2D.Double rec;
-        public Block() {
-            width = getWidth() / REC_WIDTH; //System.out.println("Block constructor");
-            height = getHeight() / REC_HEIGHT;
+        public Block(double frameWidth, double frameHeight) {
+            width = frameWidth / REC_WIDTH; //System.out.println("Block constructor");
+            height = frameHeight / REC_HEIGHT;
             heightOffset = height / 2;
-            x = getWidth() / X_POS;
-            y = getHeight() / Y_POS - heightOffset;
+            x = frameWidth / X_POS;
+            y = frameHeight / Y_POS - heightOffset;
             rec = new Rectangle2D.Double(x, y, width, height);
         }
 
@@ -124,7 +116,8 @@ class BouncingBlockComponent extends JComponent {
          * 
          */
         public void move(double dx) {
-            x += dx; System.out.println("supoposed to move");
+            x += dx;
+            rec = new Rectangle2D.Double(x, y, width, height);
             repaint();
         }
 
@@ -142,7 +135,7 @@ class BouncingBlockComponent extends JComponent {
          */
         public void draw(Graphics2D g) {
             g.setColor(Color.BLACK); 
-            g.fill(rec);System.out.println("Draw");
+            g.fill(rec);
         }
     }
 }
