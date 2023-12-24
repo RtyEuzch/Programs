@@ -1,3 +1,11 @@
+/** This program consists of a block in a JFrame, along with two buttons, 
+ *  one intended to start the movement of the block, and the other intended to
+ *  stop it. When the start button is pressed, the block moves to the right until
+ *  it touches the rightmost edge of the frame, and then reveses directions, 
+ *  meaning it oscillates back and forth until the user clicks on the stop button.
+ *  @author Charles Doan
+ *  Completion Date: 12-23-2023
+ */
 /** Import Statements */
 import java.awt.*;
 import java.awt.event.*;
@@ -19,8 +27,9 @@ public class BouncingBlockMain {
     }
 }
 
-/**
- * 
+/** This is the JComponent class that holds the features of the graphic, 
+ *  the block, its listeners, and the buttons that turn its movements
+ *  on or off.
  */
 class BouncingBlockComponent extends JComponent {
     public static final int INCREMENT = 10;
@@ -38,8 +47,9 @@ class BouncingBlockComponent extends JComponent {
          
         motionMover();
     }
-    /**
-     * 
+
+    /** Paints the component's features onto the frame
+     *  @param Graphics g the visual "paintbrush" that draws the block
      */
     @Override
     public void paintComponent(Graphics g) {
@@ -47,6 +57,11 @@ class BouncingBlockComponent extends JComponent {
         block.draw(g2); 
     }
 
+    /** Creates the start/stop buttons, adds ActionListeners to
+     *  them, and adds the buttons to the frame. The buttons 
+     *  start/stop the Timer that animates the movement of the block
+     *  @param JFrame frame the JFrame
+     */ 
     public void addButton(JFrame frame) {
         //Adding the button to start the movement of the block
         JButton startButton = new JButton("Start");
@@ -70,6 +85,10 @@ class BouncingBlockComponent extends JComponent {
         frame.add(btnPanel, BorderLayout.SOUTH);
     }
 
+    /** Creates the TimerListener, which is responsible for animating the 
+     *  block and reversing its movement if it determines that it has touched
+     *  or moved beyond the borders of the frame.
+     */ 
     public void motionMover() {
         class TimerListener implements ActionListener {
             private Block b;
@@ -115,20 +134,20 @@ class BouncingBlockComponent extends JComponent {
         }
 
         /**
-         * 
+         * @return the x position of the Block
          */
         public double getX() {
             return x;
         }
 
         /**
-         * 
+         * @return the y position of the Block (constant)
          */
         public double getY() {
             return y;
         }
 
-        /**
+        /** Changes the x position of the block by increment dx.
          * 
          */
         public void move(double dx) {
@@ -137,8 +156,9 @@ class BouncingBlockComponent extends JComponent {
             repaint();
         }
 
-        /**
-         * 
+        /** Determines if the block has touched the rightmost edge of the 
+         *  frame.
+         *  @return if the block has touched the rightmost edge of the frame.
          */
         public boolean reachedEnd() {
             if ((x + width) >= getWidth())
@@ -146,8 +166,9 @@ class BouncingBlockComponent extends JComponent {
             else return false;
         }
 
-        /**
-         * 
+        /** Determines if the block has touched the leftmost edge of the 
+         *  frame.
+         *  @return if the block has touched the leftmost edge of the frame.
          */
         public boolean reachedBeginning() {
             if ((x) <= 0)
@@ -155,8 +176,7 @@ class BouncingBlockComponent extends JComponent {
             else return false;
         }
 
-        /**
-         * 
+        /** Draws the block with a black color
          */
         public void draw(Graphics2D g) {
             g.setColor(Color.BLACK); 
