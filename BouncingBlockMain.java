@@ -35,6 +35,8 @@ class BouncingBlockComponent extends JComponent {
     public BouncingBlockComponent() {
         block = new Block(BouncingBlockMain.FRAME_WIDTH, 
                           BouncingBlockMain.FRAME_HEIGHT); 
+         
+        motionMover();
     }
     /**
      * 
@@ -47,34 +49,48 @@ class BouncingBlockComponent extends JComponent {
 
     public void addButton(JFrame frame) {
         //Adding the button to start the movement of the block
-        JButton button = new JButton("Start");
-        button.addActionListener(new ActionListener() {
+        JButton startButton = new JButton("Start");
+        startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                motionMover();
+                t.start();
             }
         });
 
+        JButton stopButton = new JButton("Stop");
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                t.stop();
+            }
+        });
         JPanel btnPanel = new JPanel();
-        btnPanel.add(button);
+        btnPanel.add(startButton);
+        btnPanel.add(stopButton);
         frame.add(btnPanel, BorderLayout.SOUTH);
     }
 
     public void motionMover() {
         class TimerListener implements ActionListener {
             private Block b;
+            private boolean movingRight = true;
             public TimerListener(Block bl) {
                 b = bl;
             }
 
             @Override
             public void actionPerformed(ActionEvent event) {
-                b.move(INCREMENT);
+                if (movingRight) {
+                    b.move(INCREMENT);
+                    if (b.reachedEnd()) movingRight = false;
+                } else {
+                    b.move(INCREMENT * -1);
+                    if (b.reachedBeginning()) movingRight = true;
+                }
             }
         }
         ActionListener timeListen = new TimerListener(block);
-        t = new Timer(DELAY, timeListen);
-        t.start(); 
+        t = new Timer(DELAY, timeListen); System.out.println("Timer is created");
     }
 
     /** This class represents the block entity and manipulates its
@@ -90,7 +106,7 @@ class BouncingBlockComponent extends JComponent {
         private double y;
         private Rectangle2D.Double rec;
         public Block(double frameWidth, double frameHeight) {
-            width = frameWidth / REC_WIDTH; //System.out.println("Block constructor");
+            width = frameWidth / REC_WIDTH; 
             height = frameHeight / REC_HEIGHT;
             heightOffset = height / 2;
             x = frameWidth / X_POS;
@@ -126,6 +142,15 @@ class BouncingBlockComponent extends JComponent {
          */
         public boolean reachedEnd() {
             if ((x + width) >= getWidth())
+                return true;
+            else return false;
+        }
+
+        /**
+         * 
+         */
+        public boolean reachedBeginning() {
+            if ((x) <= 0)
                 return true;
             else return false;
         }
