@@ -90,7 +90,7 @@ class BouncingBlockComponent extends JComponent {
             }
         }
         ActionListener timeListen = new TimerListener(block);
-        t = new Timer(DELAY, timeListen); System.out.println("Timer is created");
+        t = new Timer(DELAY, timeListen); 
     }
 
     /** This class represents the block entity and manipulates its
